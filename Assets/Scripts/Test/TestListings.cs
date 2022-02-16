@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Replay;
+using System.Collections;
+using UnityEngine.Networking;
 
 namespace Unity.Metacast.Demo
 {
@@ -9,8 +11,6 @@ namespace Unity.Metacast.Demo
     /// </summary>
     public class TestListings : MonoBehaviour
     {
-        [SerializeField] private TextAsset m_TestJson;
-
         /// <summary>
         ///     Start is called on the frame when a script is enabled just
         ///     before any of the Update methods are called the first time.
@@ -18,7 +18,19 @@ namespace Unity.Metacast.Demo
         private void Start()
         {
             //TODO Instead of a TextAsset pass JSON result from the web server.
-            UIBrowser.instance.Init(m_TestJson.text);
+            StartCoroutine(GetRequest("http://localhost:3000/games"));
+        }
+
+        private IEnumerator GetRequest(string uri)
+        {
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+            {
+                // Request and wait for the desired page.
+                yield return webRequest.SendWebRequest();
+                var responseText = webRequest.downloadHandler.text;
+                var formattedResponseText = "{\"listings\":" + responseText + "}";
+                UIBrowser.instance.Init(formattedResponseText);
+            }
         }
     }
 }
