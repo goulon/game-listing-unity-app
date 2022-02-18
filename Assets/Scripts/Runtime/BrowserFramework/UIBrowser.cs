@@ -42,7 +42,7 @@ namespace UnityEngine.Replay
 
             UICarousel carousel = FindObjectOfType<UICarousel>();
             if (carousel != null) {
-                carousel.Init("Category Name Goes Here", listings);
+                carousel.Init("Live and On-demand Game Streamings", listings);
             } else {
                 Debug.LogError("UICarousel not found");
             }
