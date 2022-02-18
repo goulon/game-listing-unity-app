@@ -28,10 +28,12 @@ namespace Unity.Metacast.Demo
                 // Request and wait for the desired page.
                 yield return webRequest.SendWebRequest();
 
-                if (webRequest.result != UnityWebRequest.Success) {
+                if (webRequest.result != UnityWebRequest.Result.Success)
+                {
                     Debug.Log(webRequest.error);
                 }
-                else {
+                else
+                {
                     var responseText = webRequest.downloadHandler.text;
                     var formattedResponseText = "{\"listings\":" + responseText + "}";
                     UIBrowser.instance.Init(formattedResponseText);
