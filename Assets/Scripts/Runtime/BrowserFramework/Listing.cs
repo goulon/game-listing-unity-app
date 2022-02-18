@@ -32,6 +32,7 @@ namespace UnityEngine.Replay
         public string title;
         public string subtitle;
         public string description;
+        public bool isPremium;
         public ImageObject[] images;
 
         /// <summary>
