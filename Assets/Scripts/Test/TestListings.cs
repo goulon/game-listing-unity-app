@@ -20,7 +20,10 @@ namespace Unity.Metacast.Demo
             //TODO Instead of a TextAsset pass JSON result from the web server.
             StartCoroutine(GetJSON("http://localhost:3000/games"));
         }
-
+        /// <summary>
+        ///     GetJSON is called by Start when a script is enabled just
+        ///     before any of the Update methods are called the first time.
+        /// </summary>
         private IEnumerator GetJSON(string uri)
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
