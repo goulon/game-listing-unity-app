@@ -18,18 +18,24 @@ namespace Unity.Metacast.Demo
         private void Start()
         {
             //TODO Instead of a TextAsset pass JSON result from the web server.
-            StartCoroutine(GetRequest("http://localhost:3000/games"));
+            StartCoroutine(GetJSON("http://localhost:3000/games"));
         }
 
-        private IEnumerator GetRequest(string uri)
+        private IEnumerator GetJSON(string uri)
         {
             using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
                 // Request and wait for the desired page.
                 yield return webRequest.SendWebRequest();
-                var responseText = webRequest.downloadHandler.text;
-                var formattedResponseText = "{\"listings\":" + responseText + "}";
-                UIBrowser.instance.Init(formattedResponseText);
+
+                if (webRequest.result != UnityWebRequest.Success) {
+                    Debug.Log(webRequest.error);
+                }
+                else {
+                    var responseText = webRequest.downloadHandler.text;
+                    var formattedResponseText = "{\"listings\":" + responseText + "}";
+                    UIBrowser.instance.Init(formattedResponseText);
+                }
             }
         }
     }
