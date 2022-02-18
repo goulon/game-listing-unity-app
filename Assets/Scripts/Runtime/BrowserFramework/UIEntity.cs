@@ -1,4 +1,5 @@
-
+using System.Collections;
+using UnityEngine.Networking;
 namespace UnityEngine.Replay
 {
     /// <summary>
@@ -25,6 +26,28 @@ namespace UnityEngine.Replay
         }
 
         /// <summary>
+        ///     Gets the image content based on a URL
+        /// </summary>
+        /// <param name="image">The image to set the texture to</param>
+        /// <param name="imageUrl">The image URL to request the texture</param>
+        private IEnumerator GetImageTexture(UIImage image, string imageUrl)
+        {
+            using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(imageUrl))
+            {
+                yield return uwr.SendWebRequest();
+                if (uwr.result != UnityWebRequest.Result.Success)
+                {
+                    Debug.Log(uwr.error);
+                }
+                else
+                {
+                    // Get downloaded asset bundle
+                    image.SetImage(DownloadHandlerTexture.GetContent(uwr));
+                }
+            }
+        }
+
+        /// <summary>
         ///     Sets the entity's content based on a Listing
         /// </summary>
         /// <param name="l">The Listing to use</param>
@@ -34,7 +57,8 @@ namespace UnityEngine.Replay
             foreach (var text in m_Texts) text.SetText(l.GetText(text.textType));
             foreach (var image in m_Images)
             {
-                image.SetImage(l.GetImage(image.imageType));
+                string imageUrl = m_Listing.images[0].url;
+                StartCoroutine(GetImageTexture(image, imageUrl));
             }
         }
     }
